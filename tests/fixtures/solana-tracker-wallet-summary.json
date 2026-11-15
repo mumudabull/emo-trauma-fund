@@ -1,0 +1,62 @@
+{
+  "wallet": "CyaE1VxvBrahnPWkqm5VsdCvyS2QmNht2UFrKJHga54o",
+  "pnlMode": "strict",
+  "identity": {
+    "name": "Cented",
+    "twitter": "@Cented7",
+    "avatar": "https://kol-avatar.solanatracker.io/CyaE1VxvBrahnPWkqm5VsdCvyS2QmNht2UFrKJHga54o",
+    "platforms": ["axiom", "bloom"],
+    "type": "kol",
+    "tags": ["kol", "axiom", "bloom"]
+  },
+  "summary": {
+    "pnl": {
+      "realized": 10705447.32,
+      "unrealized": 1395.74,
+      "total": 10706843.06
+    },
+    "invested": 49779099.94,
+    "proceeds": 60484547.26,
+    "openPositions": { "cost": 5118.14, "value": 7855.98 },
+    "counts": {
+      "buys": 196215,
+      "sells": 138588,
+      "trades": 334803,
+      "tokensTraded": 78676,
+      "tokensHeldEver": 78553
+    },
+    "averages": { "buy": 259.77, "sell": 436.43 },
+    "roi": 21.51,
+    "timing": {
+      "firstTrade": 1738348560665,
+      "lastTrade": 1777057718629,
+      "avgHoldTimeSecs": 20391
+    }
+  },
+  "analysis": {
+    "winRate": 61.17,
+    "avgPnlPerAsset": 135.12,
+    "avgBuyValue": 648.88,
+    "tokens": { "closed": 78518, "winning": 48029, "losing": 30375 },
+    "distribution": [
+      { "range": ">500%", "count": 145, "rate": 0.18 },
+      { "range": "200-500%", "count": 1068, "rate": 1.36 },
+      { "range": "50-200%", "count": 10662, "rate": 13.58 },
+      { "range": "0-50%", "count": 36273, "rate": 46.2 },
+      { "range": "-50-0%", "count": 29252, "rate": 37.26 },
+      { "range": "<-50%", "count": 1118, "rate": 1.42 }
+    ]
+  },
+  "stats": {
+    "total": 78676,
+    "holding": 100,
+    "sold": 78424,
+    "profitable": 48041,
+    "losing": 30370
+  },
+  "tags": {
+    "isArbitrage": false,
+    "platforms": ["axiom-flash", "bloom"]
+  },
+  "updatedAt": "2026-04-24T19:08:38.649Z"
+}

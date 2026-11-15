@@ -1,26 +1,101 @@
+/*
+ * File: src/app/globals.css
+ * Purpose: Global stylesheet and design tokens for the Emotional Trauma Fund
+ * site. Layout idea: a fund fact sheet. Cool paper background, white
+ * surfaces, hairline rules, a serif display face for headlines and figures,
+ * and a monospace face for labels and numbers. Single light theme by design.
+ */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Neutrals carry a slight cool-green bias toward the accent. */
+  --color-paper: #f7f7f4;
+  --color-surface: #ffffff;
+  --color-ink: #15181c;
+  --color-ink-soft: #4b5159;
+  --color-ink-faint: #868c94;
+  --color-line: #e3e4df;
+  --color-line-strong: #cdd0c9;
+
+  /* Accent: a restrained slate blue used only for interactive elements. */
+  --color-accent: #1f3a4d;
+  --color-accent-hover: #162c3b;
+  --color-accent-soft: #e9eff2;
+
+  /* Semantic colors, kept separate from the accent. */
+  --color-loss: #b0382f;
+  --color-loss-soft: #f7ebe9;
+  --color-gain: #2c7551;
+  --color-gain-soft: #e8f2ec;
+  --color-caution: #8f6516;
+  --color-caution-soft: #f6f0e1;
+
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-display:
+    var(--font-instrument-serif), "Iowan Old Style", "Palatino Linotype",
+    Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
+/*
+ * Element defaults live in the base layer. Unlayered rules would outrank
+ * every Tailwind utility regardless of specificity (for example, the
+ * paragraph text-wrap below would defeat the `truncate` utility).
+ */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    scroll-behavior: smooth;
+    /* Keeps anchored sections clear of the top edge when jumped to. */
+    scroll-padding-top: 1.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One consistent, visible keyboard focus state across the site. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-ink);
+  }
+
+  /* Removes the native disclosure triangle so FAQ rows can use an icon. */
+  summary {
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
 }

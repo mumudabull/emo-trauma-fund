@@ -1,0 +1,123 @@
+{
+  "wallet": "CyaE1VxvBrahnPWkqm5VsdCvyS2QmNht2UFrKJHga54o",
+  "identity": {
+    "name": "Cented",
+    "twitter": "@Cented7",
+    "platforms": ["axiom", "bloom"],
+    "type": "kol",
+    "tags": ["kol", "axiom", "bloom"]
+  },
+  "positions": [
+    {
+      "token": "84cAEWqiDsV5xXh6CB69Hi3HcnumBbdjH4THfyorpump",
+      "pnl": { "realized": -1250.4, "unrealized": 0, "total": -1250.4 },
+      "invested": 2621.72,
+      "proceeds": 1371.32,
+      "roi": -47.69,
+      "current": {
+        "balance": 0,
+        "costBasis": 0,
+        "value": 0,
+        "price": 0.000016173713662274,
+        "avgCost": 0
+      },
+      "volume": {
+        "tokensBought": 96296057.47,
+        "tokensSold": 96296057.47,
+        "buyUsd": 2621.72,
+        "sellUsd": 1371.32
+      },
+      "averages": { "buy": 70.86, "sell": 34.28 },
+      "counts": { "buys": 37, "sells": 40, "total": 77 },
+      "timing": {
+        "firstBuy": 1774277622281,
+        "lastBuy": 1774294723039,
+        "firstSell": 1774277870173,
+        "lastSell": 1774296331666,
+        "firstTrade": 1774277622281,
+        "lastTrade": 1774296331666,
+        "holdTimeSecs": 18709
+      },
+      "meta": {
+        "symbol": "7",
+        "name": "The 7 Wanderers",
+        "image": "https://example.invalid/7.png",
+        "decimals": 6,
+        "price": 0.000016173713662274,
+        "snapshotPrice": 0.0000225842,
+        "marketCap": 16168.06,
+        "liquidity": 14118.7,
+        "primaryMarket": "pumpfun-amm"
+      },
+      "portfolioPercent": 0
+    },
+    {
+      "token": "7oBYdEhV4GkXC19ZfgAvXpJWp2Rn9pm1Bx2cVNxFpump",
+      "pnl": { "realized": -30000, "unrealized": -5871.5, "total": -35871.5 },
+      "invested": 198075.65,
+      "proceeds": 160000,
+      "roi": -18.11,
+      "current": {
+        "balance": 1520000.25,
+        "costBasis": 8075.65,
+        "value": 2204.15,
+        "price": 0.00145,
+        "avgCost": 0.0053
+      },
+      "volume": {
+        "tokensBought": 40000000,
+        "tokensSold": 38479999.75,
+        "buyUsd": 198075.65,
+        "sellUsd": 160000
+      },
+      "averages": { "buy": 4000.1, "sell": 3900.2 },
+      "counts": { "buys": 49, "sells": 41, "total": 90 },
+      "timing": {
+        "firstBuy": 1746044721229,
+        "lastBuy": 1772031549416,
+        "firstSell": 1746044751527,
+        "lastSell": 1772032040873,
+        "firstTrade": 1746044721229,
+        "lastTrade": 1772032040873,
+        "holdTimeSecs": 25987320
+      },
+      "meta": {
+        "symbol": "gork",
+        "name": "New XAI gork",
+        "image": "https://example.invalid/gork.png",
+        "decimals": 6,
+        "price": 0.00145,
+        "snapshotPrice": 0.00166,
+        "marketCap": 1489948.99,
+        "liquidity": 371378.83,
+        "primaryMarket": "pumpfun-amm"
+      },
+      "portfolioPercent": 28.05
+    },
+    {
+      "token": "FJEMUVcjUYu25i5XgMziVTWYq3D8KbXPL6WStJcXpump",
+      "pnl": { "realized": 0, "unrealized": 0, "total": 0 },
+      "invested": 100,
+      "proceeds": 100,
+      "roi": 0,
+      "current": { "balance": 0, "value": 0 },
+      "timing": { "lastTrade": null },
+      "meta": null
+    }
+  ],
+  "stats": {
+    "total": 78195,
+    "filtered": 30175,
+    "holding": 67,
+    "sold": 77978,
+    "profitable": 47817,
+    "losing": 30175
+  },
+  "pagination": {
+    "hasMore": true,
+    "nextCursor": "eyJzb3J0VmFsdWUi",
+    "count": 3,
+    "total": 30175,
+    "pnlMode": "strict"
+  }
+}
