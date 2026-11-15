@@ -21,6 +21,10 @@ const FACT_SHEET_ROWS: readonly FactSheetRow[] = [
   { term: "Asset class", detail: "Emotional damage" },
   { term: "Benchmark", detail: "Your entry price" },
   { term: "Inception", detail: "The first candle you chased" },
+  {
+    term: "Trading fee",
+    detail: `${siteConfig.tradingFee.totalPercent}% (${siteConfig.tradingFee.fundPercent}% fund, ${siteConfig.tradingFee.buybackPercent}% buyback)`,
+  },
   { term: "Loss scanner", detail: <StatusPill tone="live">Live</StatusPill> },
   { term: "Claims desk", detail: <StatusPill tone="next">Next</StatusPill> },
   {

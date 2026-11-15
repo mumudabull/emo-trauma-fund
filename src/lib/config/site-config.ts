@@ -57,6 +57,18 @@ export const siteConfig = {
   ticker: "$ETF",
   chainName: "Solana",
   tagline: "The fund for everything the market did to you.",
+  /**
+   * Fee model for $ETF trading, in percent. The fund section, the fact sheet
+   * and the roadmap all read these values, so the published split has one
+   * source. totalPercent must equal fundPercent plus buybackPercent.
+   */
+  tradingFee: {
+    totalPercent: 2,
+    /** Routed to the fund wallet to pay weekly claims. */
+    fundPercent: 1,
+    /** Used to buy $ETF on the market and airdrop it to holders. */
+    buybackPercent: 1,
+  },
   description:
     "Paste a Solana wallet. The Emotional Trauma Fund reviews its trading history, totals the damage and issues a trauma score with a report you can share.",
   siteUrl: resolveSiteUrl(),

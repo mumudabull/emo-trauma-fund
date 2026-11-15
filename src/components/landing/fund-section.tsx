@@ -1,42 +1,35 @@
 /**
  * File: src/components/landing/fund-section.tsx
- * Purpose: Describes the planned claims desk: how the fund is financed, how
- * payouts are intended to work and the anti-farming rules. Everything here is
- * labelled as planned and non-binding because claims are not open yet.
+ * Purpose: Describes how the fund is financed and paid out: the trading fee,
+ * its split between the claims fund and the buyback airdrop, and the
+ * anti-farming rules. Percentages come from siteConfig.tradingFee. The claims
+ * desk is labelled as the next release because claims are not open yet.
  */
-import {
-  CalendarDays,
-  Coins,
-  Info,
-  ShieldCheck,
-  type LucideIcon,
-} from "lucide-react";
+import { Info, ShieldCheck } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { StatusPill } from "@/components/status-pill";
 import { siteConfig } from "@/lib/config/site-config";
 
-interface FundPrinciple {
+const { tradingFee, ticker } = siteConfig;
+
+interface FeeAllocation {
+  /** Share of every trade, in percent. */
+  percent: number;
   title: string;
   description: string;
-  icon: LucideIcon;
 }
 
-const FUND_PRINCIPLES: readonly FundPrinciple[] = [
+/** Where each part of the trading fee goes. The parts sum to the total fee. */
+const FEE_ALLOCATIONS: readonly FeeAllocation[] = [
   {
-    title: "Funded by trading fees",
-    description: `Creator fees from ${siteConfig.ticker} trading are routed to the fund wallet. The fund has no other source of money.`,
-    icon: Coins,
+    percent: tradingFee.fundPercent,
+    title: "To the fund",
+    description: `Goes to the fund wallet. Each week the fund pays discretionary claims to the ${ticker} holders with the highest trauma scores.`,
   },
   {
-    title: "Weekly claims",
-    description: `Each week the fund sends discretionary airdrops to the ${siteConfig.ticker} holders with the highest trauma scores.`,
-    icon: CalendarDays,
-  },
-  {
-    title: "Built against farming",
-    description:
-      "Only losses from before a published snapshot date count, wallets must be verified by signature, and payouts are capped per wallet.",
-    icon: ShieldCheck,
+    percent: tradingFee.buybackPercent,
+    title: "To buybacks",
+    description: `Buys ${ticker} on the open market and airdrops it to holders.`,
   },
 ];
 
@@ -52,33 +45,50 @@ export function FundSection() {
           <SectionHeading
             titleId="fund-title"
             label="The fund"
-            title="A claims desk for the damage"
+            title={`A ${tradingFee.totalPercent}% fee, split in two`}
             labelAccessory={<StatusPill tone="next">Next</StatusPill>}
           >
-            The scanner measures the damage. The claims desk is the next
-            release, and it is what turns a score into a payout.
+            Every {ticker} trade carries a {tradingFee.totalPercent}% fee. Half
+            pays claims for the damage the scanner measures, and half buys{" "}
+            {ticker} for holders. The fee is the only money the fund has.
           </SectionHeading>
         </div>
 
         <ul className="grid gap-6 md:grid-cols-3">
-          {FUND_PRINCIPLES.map((fundPrinciple) => (
+          {FEE_ALLOCATIONS.map((feeAllocation) => (
             <li
-              key={fundPrinciple.title}
+              key={feeAllocation.title}
               className="flex flex-col gap-4 border-t border-ink pt-6"
             >
-              <fundPrinciple.icon
-                aria-hidden="true"
-                className="size-5 text-ink-soft"
-                strokeWidth={1.5}
-              />
+              <p className="font-display text-6xl leading-none tabular-nums text-ink">
+                {feeAllocation.percent}%
+              </p>
               <h3 className="text-base font-medium text-ink">
-                {fundPrinciple.title}
+                {feeAllocation.title}
               </h3>
               <p className="text-sm leading-relaxed text-ink-soft">
-                {fundPrinciple.description}
+                {feeAllocation.description}
               </p>
             </li>
           ))}
+
+          <li className="flex flex-col gap-4 border-t border-ink pt-6">
+            {/* Sized to sit on the same baseline rhythm as the percentages. */}
+            <div className="flex h-[3.75rem] items-end">
+              <ShieldCheck
+                aria-hidden="true"
+                className="size-9 text-ink-soft"
+                strokeWidth={1.25}
+              />
+            </div>
+            <h3 className="text-base font-medium text-ink">
+              Built against farming
+            </h3>
+            <p className="text-sm leading-relaxed text-ink-soft">
+              Only losses from before a published snapshot date count, wallets
+              must be verified by signature, and claims are capped per wallet.
+            </p>
+          </li>
         </ul>
 
         <p className="flex max-w-3xl items-start gap-3 rounded-lg border border-line bg-surface p-4 text-sm leading-relaxed text-ink-soft">
@@ -86,9 +96,9 @@ export function FundSection() {
             aria-hidden="true"
             className="mt-0.5 size-4 shrink-0 text-ink-faint"
           />
-          Claims are not open yet. Airdrops are discretionary, a high score does
-          not entitle anyone to payment, and the rules above may change before
-          launch.
+          Claims are not open yet. Claims and airdrops are discretionary, a high
+          score does not entitle anyone to payment, and the rules above may
+          change before launch.
         </p>
       </div>
     </section>

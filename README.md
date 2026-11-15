@@ -150,8 +150,11 @@ locally either way.
 1. **Loss scanner** (this repository): wallet scan, trauma score, report page,
    share card, JSON API.
 2. **Claims desk**: wallet verification by signature, scoring fixed to a
-   published snapshot date, weekly discretionary airdrops from creator fees to
-   top-scoring $ETF holders, capped per wallet, with a public payout ledger.
+   published snapshot date, and the fee split going live. $ETF trading carries
+   a 2% fee: 1% goes to the fund wallet and pays weekly discretionary claims
+   to the top-scoring holders (capped per wallet), and 1% buys $ETF on the
+   market and airdrops it to holders. Every payout goes on a public ledger.
+   The percentages live in `siteConfig.tradingFee`.
 3. **Group therapy on Telegram**: a bot that scans wallets in chat (via
    `/api/scan/{wallet}`), posts rug and liquidation alerts as intake notices,
    and runs a weekly worst-trade leaderboard.
