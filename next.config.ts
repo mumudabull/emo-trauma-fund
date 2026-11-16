@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // The share-card routes read fonts and artwork from disk at request time.
+  // Listing the folders here guarantees they ship with those functions even
+  // if static analysis misses a path.
+  outputFileTracingIncludes: {
+    "/**": [
+      "./src/assets/fonts/*.woff",
+      "./src/assets/tier-art/*.jpg",
+      "./src/assets/share-art/*.jpg",
+    ],
+  },
   turbopack: {
     rules: {
       "*.css": {

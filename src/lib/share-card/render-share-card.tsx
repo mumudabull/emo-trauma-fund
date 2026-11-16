@@ -1,8 +1,9 @@
 /**
  * File: src/lib/share-card/render-share-card.tsx
  * Purpose: Renders the 1200x630 social share cards as PNG images: a brand
- * card for the site and a report card showing a wallet's trauma score and
- * diagnosis. Used by the opengraph-image routes.
+ * card for the site and a report card showing a wallet's trauma score,
+ * diagnosis and the artwork for that diagnosis. Used by the opengraph-image
+ * routes.
  *
  * The markup here is rendered by Satori, not a browser. Satori supports only
  * flexbox and a subset of CSS, and every element with more than one child
@@ -14,6 +15,10 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { ReactNode } from "react";
 import { siteConfig } from "@/lib/config/site-config";
+import {
+  loadSiteShareArtDataUrl,
+  loadTierArtDataUrl,
+} from "@/lib/share-card/share-card-art";
 import { TRAUMA_TIERS } from "@/lib/scanner/trauma-score";
 import type { TraumaAssessment } from "@/lib/scanner/types";
 import { truncateWalletAddress } from "@/lib/solana/wallet-address";
@@ -115,57 +120,62 @@ function resolveDisplayHost(): string {
   }
 }
 
-function CardHeader({ contextLabel }: { contextLabel: string }) {
+/** Horizontal padding of the text column, shared by layout maths below. */
+const TEXT_COLUMN_PADDING_X = 52;
+
+/** Width of the square artwork panel on report cards (full card height). */
+const REPORT_ART_PANEL_WIDTH = SHARE_CARD_SIZE.height;
+
+/** Width of the 3:4 artwork panel on the site card at full card height. */
+const SITE_ART_PANEL_WIDTH = Math.round((SHARE_CARD_SIZE.height * 3) / 4);
+
+function BrandLockup() {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: 44,
-            padding: "0 12px",
-            border: `2px solid ${CARD_COLORS.ink}`,
-            borderRadius: 7,
-            fontFamily: "Geist Mono",
-            fontSize: 18,
-            letterSpacing: 3,
-            color: CARD_COLORS.ink,
-          }}
-        >
-          ETF
-        </div>
-        <div
-          style={{
-            display: "flex",
-            fontFamily: "Instrument Serif",
-            fontSize: 38,
-            color: CARD_COLORS.ink,
-          }}
-        >
-          {siteConfig.name}
-        </div>
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: 40,
+          padding: "0 11px",
+          border: `2px solid ${CARD_COLORS.ink}`,
+          borderRadius: 7,
+          fontFamily: "Geist Mono",
+          fontSize: 17,
+          letterSpacing: 3,
+          color: CARD_COLORS.ink,
+        }}
+      >
+        ETF
       </div>
       <div
         style={{
           display: "flex",
-          fontFamily: "Geist Mono",
-          fontSize: 18,
-          letterSpacing: 3,
-          textTransform: "uppercase",
-          color: CARD_COLORS.inkFaint,
+          fontFamily: "Instrument Serif",
+          fontSize: 34,
+          color: CARD_COLORS.ink,
         }}
       >
-        {contextLabel}
+        {siteConfig.name}
       </div>
+    </div>
+  );
+}
+
+function CardLabel({ children }: { children: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        fontFamily: "Geist Mono",
+        fontSize: 17,
+        letterSpacing: 3,
+        textTransform: "uppercase",
+        color: CARD_COLORS.inkFaint,
+      }}
+    >
+      {children}
     </div>
   );
 }
@@ -178,10 +188,10 @@ function CardFooter({ leftText }: { leftText: string }) {
         alignItems: "center",
         justifyContent: "space-between",
         width: "100%",
-        paddingTop: 22,
+        paddingTop: 18,
         borderTop: `1px solid ${CARD_COLORS.line}`,
         fontFamily: "Geist Mono",
-        fontSize: 18,
+        fontSize: 17,
         letterSpacing: 1,
         color: CARD_COLORS.inkFaint,
       }}
@@ -192,22 +202,58 @@ function CardFooter({ leftText }: { leftText: string }) {
   );
 }
 
-function CardFrame({ children }: { children: ReactNode }) {
+/**
+ * Two-panel card: a text column on the left and, when artwork is available,
+ * a full-height picture on the right. Without artwork the text column takes
+ * the whole card, so a missing image file never breaks a share link.
+ */
+function CardLayout({
+  artDataUrl,
+  artPanelWidth,
+  children,
+}: {
+  artDataUrl: string | null;
+  artPanelWidth: number;
+  children: ReactNode;
+}) {
+  const textColumnWidth = artDataUrl
+    ? SHARE_CARD_SIZE.width - artPanelWidth
+    : SHARE_CARD_SIZE.width;
+
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
         width: "100%",
         height: "100%",
-        padding: "56px 64px",
         backgroundColor: CARD_COLORS.paper,
         fontFamily: "Geist",
         color: CARD_COLORS.ink,
       }}
     >
-      {children}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          width: textColumnWidth,
+          height: "100%",
+          padding: `44px ${TEXT_COLUMN_PADDING_X}px`,
+        }}
+      >
+        {children}
+      </div>
+      {artDataUrl ? (
+        // Satori renders plain img elements; next/image is not available here.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={artDataUrl}
+          alt=""
+          width={artPanelWidth}
+          height={SHARE_CARD_SIZE.height}
+          style={{ objectFit: "cover" }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -216,26 +262,30 @@ function CardFrame({ children }: { children: ReactNode }) {
 export async function renderBrandShareCard(
   options: {
     contextLabel?: string;
-    supportingLine?: string;
     cachePolicy?: ShareCardCachePolicy;
   } = {},
 ): Promise<ImageResponse> {
   const {
     contextLabel = `${siteConfig.ticker} on ${siteConfig.chainName}`,
-    supportingLine = "Paste a Solana wallet. Get a trauma score and a report you can share.",
     cachePolicy = "brand",
   } = options;
+  const [shareCardFonts, siteArtDataUrl] = await Promise.all([
+    loadShareCardFonts(),
+    loadSiteShareArtDataUrl(),
+  ]);
 
   return new ImageResponse(
-    <CardFrame>
-      <CardHeader contextLabel={contextLabel} />
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+    <CardLayout
+      artDataUrl={siteArtDataUrl}
+      artPanelWidth={SITE_ART_PANEL_WIDTH}
+    >
+      <BrandLockup />
+      <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
         <div
           style={{
             display: "flex",
-            maxWidth: 980,
             fontFamily: "Instrument Serif",
-            fontSize: 96,
+            fontSize: 78,
             lineHeight: 1,
             color: CARD_COLORS.ink,
           }}
@@ -245,65 +295,68 @@ export async function renderBrandShareCard(
         <div
           style={{
             display: "flex",
-            maxWidth: 820,
-            fontSize: 30,
+            fontSize: 27,
             lineHeight: 1.35,
             color: CARD_COLORS.inkSoft,
           }}
         >
-          {supportingLine}
+          Paste a Solana wallet. Get a trauma score and a report you can share.
         </div>
       </div>
-      <CardFooter leftText="Loss scanner" />
-    </CardFrame>,
+      <CardFooter leftText={contextLabel} />
+    </CardLayout>,
     {
       ...SHARE_CARD_SIZE,
-      fonts: await loadShareCardFonts(),
+      fonts: shareCardFonts,
       headers: { "Cache-Control": SHARE_CARD_CACHE_CONTROL[cachePolicy] },
     },
   );
 }
 
-/** Card for a diagnosed wallet: score, diagnosis and the severity scale. */
+/**
+ * Card for a diagnosed wallet: score, diagnosis, the severity scale and the
+ * artwork that belongs to the wallet's diagnosis tier.
+ */
 export async function renderReportShareCard(
   walletAddress: string,
   assessment: TraumaAssessment,
 ): Promise<ImageResponse> {
-  // Width of the scale in pixels: card width minus horizontal padding.
-  const scaleWidth = SHARE_CARD_SIZE.width - 64 * 2;
-  const markerOffset = (assessment.score / 100) * scaleWidth;
+  const [shareCardFonts, tierArtDataUrl] = await Promise.all([
+    loadShareCardFonts(),
+    loadTierArtDataUrl(assessment.tier.key),
+  ]);
+
+  // The scale spans the text column, so its width depends on whether the
+  // artwork panel is present.
+  const textColumnWidth = tierArtDataUrl
+    ? SHARE_CARD_SIZE.width - REPORT_ART_PANEL_WIDTH
+    : SHARE_CARD_SIZE.width;
+  const scaleWidth = textColumnWidth - TEXT_COLUMN_PADDING_X * 2;
+  const markerWidth = 4;
+  const markerOffset = Math.max(
+    0,
+    Math.min(
+      scaleWidth - markerWidth,
+      (assessment.score / 100) * scaleWidth - markerWidth / 2,
+    ),
+  );
 
   return new ImageResponse(
-    <CardFrame>
-      <CardHeader contextLabel="Patient report" />
+    <CardLayout
+      artDataUrl={tierArtDataUrl}
+      artPanelWidth={REPORT_ART_PANEL_WIDTH}
+    >
+      <BrandLockup />
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-          width: "100%",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <div
-            style={{
-              display: "flex",
-              fontFamily: "Geist Mono",
-              fontSize: 18,
-              letterSpacing: 3,
-              textTransform: "uppercase",
-              color: CARD_COLORS.inkFaint,
-            }}
-          >
-            Trauma score
-          </div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 18 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <CardLabel>Trauma score</CardLabel>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
             <div
               style={{
                 display: "flex",
                 fontFamily: "Instrument Serif",
-                fontSize: 250,
+                fontSize: 196,
                 lineHeight: 0.85,
                 color: CARD_COLORS.ink,
               }}
@@ -314,7 +367,7 @@ export async function renderReportShareCard(
               style={{
                 display: "flex",
                 fontFamily: "Geist Mono",
-                fontSize: 26,
+                fontSize: 24,
                 color: CARD_COLORS.inkFaint,
               }}
             >
@@ -323,33 +376,13 @@ export async function renderReportShareCard(
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            gap: 10,
-            maxWidth: 620,
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <CardLabel>Diagnosis</CardLabel>
           <div
             style={{
               display: "flex",
-              fontFamily: "Geist Mono",
-              fontSize: 18,
-              letterSpacing: 3,
-              textTransform: "uppercase",
-              color: CARD_COLORS.inkFaint,
-            }}
-          >
-            Diagnosis
-          </div>
-          <div
-            style={{
-              display: "flex",
-              textAlign: "right",
               fontFamily: "Instrument Serif",
-              fontSize: 78,
+              fontSize: 58,
               lineHeight: 1,
               color: CARD_COLORS.ink,
             }}
@@ -360,7 +393,7 @@ export async function renderReportShareCard(
             style={{
               display: "flex",
               fontFamily: "Geist Mono",
-              fontSize: 22,
+              fontSize: 20,
               color: CARD_COLORS.inkSoft,
             }}
           >
@@ -369,26 +402,26 @@ export async function renderReportShareCard(
         </div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
         {/* Severity scale with a marker at the wallet's score. */}
         <div
           style={{
             display: "flex",
             position: "relative",
             width: scaleWidth,
-            height: 34,
+            height: 30,
             alignItems: "center",
           }}
         >
-          <div style={{ display: "flex", width: "100%", height: 12, gap: 3 }}>
+          <div style={{ display: "flex", width: "100%", height: 10, gap: 3 }}>
             {TRAUMA_TIERS.map((tier, tierIndex) => (
               <div
                 key={tier.key}
                 style={{
                   display: "flex",
                   flexGrow: tier.maximumScore - tier.minimumScore + 1,
-                  height: 12,
-                  borderRadius: 6,
+                  height: 10,
+                  borderRadius: 5,
                   backgroundColor: BAND_FILL_COLORS[tierIndex],
                 }}
               />
@@ -399,9 +432,9 @@ export async function renderReportShareCard(
               display: "flex",
               position: "absolute",
               top: 0,
-              left: Math.max(0, Math.min(scaleWidth - 4, markerOffset - 2)),
-              width: 4,
-              height: 34,
+              left: markerOffset,
+              width: markerWidth,
+              height: 30,
               borderRadius: 2,
               backgroundColor: CARD_COLORS.ink,
             }}
@@ -409,10 +442,10 @@ export async function renderReportShareCard(
         </div>
         <CardFooter leftText={`${siteConfig.ticker} loss scanner`} />
       </div>
-    </CardFrame>,
+    </CardLayout>,
     {
       ...SHARE_CARD_SIZE,
-      fonts: await loadShareCardFonts(),
+      fonts: shareCardFonts,
       headers: { "Cache-Control": SHARE_CARD_CACHE_CONTROL.report },
     },
   );

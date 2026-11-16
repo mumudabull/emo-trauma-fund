@@ -82,6 +82,8 @@ src/
     solana/                    wallet address validation
   assets/fonts/                self-hosted fonts (SIL Open Font License)
   assets/art/                  mascot artwork used in the hero, gallery and report
+  assets/tier-art/             one square image per diagnosis tier (share card and report)
+  assets/share-art/            site-wide share card artwork
 tests/                         vitest unit tests and provider fixtures
 ```
 
@@ -101,6 +103,24 @@ How a scan runs:
 
 Adding a second chain or data source means writing one adapter that returns a
 `WalletLossProfile`. Scoring and UI do not change.
+
+## Share images
+
+Every report has its own share card (1200x630) with the score, the diagnosis
+and the artwork for that diagnosis. The site itself has a brand card.
+
+To change a picture, replace the file and redeploy. No code change is needed.
+
+| Card                | File                                          | Shape                             |
+| ------------------- | --------------------------------------------- | --------------------------------- |
+| Site                | `src/assets/share-art/site.jpg`               | Portrait 3:4, at least 630px tall |
+| Clinically Fine     | `src/assets/tier-art/clinically_fine.jpg`     | Square, at least 630px            |
+| Mild Bag Fatigue    | `src/assets/tier-art/mild_bag_fatigue.jpg`    | Square, at least 630px            |
+| Chronic Bagholder   | `src/assets/tier-art/chronic_bagholder.jpg`   | Square, at least 630px            |
+| Acute Rug Trauma    | `src/assets/tier-art/acute_rug_trauma.jpg`    | Square, at least 630px            |
+| Terminal Degeneracy | `src/assets/tier-art/terminal_degeneracy.jpg` | Square, at least 630px            |
+
+`npm test` checks that every file exists and has the right shape.
 
 ## Trauma score
 
