@@ -41,12 +41,12 @@ export type ShareCardCachePolicy = keyof typeof SHARE_CARD_CACHE_CONTROL;
 
 /** Mirrors the site's design tokens; Satori cannot read CSS variables. */
 const CARD_COLORS = {
-  paper: "#f7f7f4",
+  paper: "#fdf8f9",
   surface: "#ffffff",
-  ink: "#15181c",
-  inkSoft: "#4b5159",
-  inkFaint: "#868c94",
-  line: "#e3e4df",
+  ink: "#1d1519",
+  inkSoft: "#5b4b53",
+  inkFaint: "#8f7d85",
+  line: "#f1e3e8",
 } as const;
 
 /** Severity tints for the five diagnosis bands, faintest first. */

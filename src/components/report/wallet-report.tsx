@@ -6,8 +6,10 @@
  */
 import { ArrowUpRight, Bot } from "lucide-react";
 import { headers } from "next/headers";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
+import nursePortrait from "@/assets/art/nurse-portrait.jpg";
 import { ReportStatGrid } from "@/components/report/report-stat-grid";
 import {
   ScanStatusNotice,
@@ -41,16 +43,26 @@ function ReportHeader({
 }) {
   return (
     <header className="flex flex-col gap-3 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between">
-      <div className="flex flex-col gap-2">
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
-          Patient report
-        </p>
-        <h1 className="font-display text-4xl leading-none text-ink sm:text-5xl">
-          Wallet{" "}
-          <span className="font-mono text-[0.6em] tracking-tight text-ink-soft">
-            {truncateWalletAddress(walletAddress, 5)}
-          </span>
-        </h1>
+      <div className="flex items-center gap-4">
+        {/* Decorative: the heading beside it already names the report. */}
+        <Image
+          src={nursePortrait}
+          alt=""
+          placeholder="blur"
+          sizes="4rem"
+          className="size-14 shrink-0 rounded-full border border-line sm:size-16"
+        />
+        <div className="flex flex-col gap-2">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-faint">
+            Patient report · reviewed by the nurse on duty
+          </p>
+          <h1 className="font-display text-4xl leading-none text-ink sm:text-5xl">
+            Wallet{" "}
+            <span className="font-mono text-[0.6em] tracking-tight text-ink-soft">
+              {truncateWalletAddress(walletAddress, 5)}
+            </span>
+          </h1>
+        </div>
       </div>
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-soft">
         {dataAsOfLabel ? <span>Data as of {dataAsOfLabel}</span> : null}

@@ -81,6 +81,7 @@ src/
     format/                    money, percent, duration and date formatting
     solana/                    wallet address validation
   assets/fonts/                self-hosted fonts (SIL Open Font License)
+  assets/art/                  mascot artwork used in the hero, gallery and report
 tests/                         vitest unit tests and provider fixtures
 ```
 

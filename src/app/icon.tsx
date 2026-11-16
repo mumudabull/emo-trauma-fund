@@ -1,7 +1,7 @@
 /**
  * File: src/app/icon.tsx
- * Purpose: Generates the site favicon: the "ETF" monogram on the brand's ink
- * color. Generated from code so the icon always matches the wordmark.
+ * Purpose: Generates the site favicon: the "ETF" monogram on the brand's rose
+ * accent. Generated from code so the icon always matches the wordmark.
  */
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -30,8 +30,8 @@ export default async function Icon() {
         width: "100%",
         height: "100%",
         borderRadius: 12,
-        backgroundColor: "#15181c",
-        color: "#f7f7f4",
+        backgroundColor: "#cf2d66",
+        color: "#ffffff",
         fontFamily: "Geist Mono",
         fontSize: 26,
         letterSpacing: 1,

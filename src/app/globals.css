@@ -1,26 +1,26 @@
 /*
  * File: src/app/globals.css
  * Purpose: Global stylesheet and design tokens for the Emotional Trauma Fund
- * site. Layout idea: a fund fact sheet. Cool paper background, white
+ * site. Layout idea: a fund fact sheet in the brand's nurse palette. Blush paper, white
  * surfaces, hairline rules, a serif display face for headlines and figures,
  * and a monospace face for labels and numbers. Single light theme by design.
  */
 @import "tailwindcss";
 
 @theme inline {
-  /* Neutrals carry a slight cool-green bias toward the accent. */
-  --color-paper: #f7f7f4;
+  /* Neutrals carry a slight rose bias toward the accent. */
+  --color-paper: #fdf8f9;
   --color-surface: #ffffff;
-  --color-ink: #15181c;
-  --color-ink-soft: #4b5159;
-  --color-ink-faint: #868c94;
-  --color-line: #e3e4df;
-  --color-line-strong: #cdd0c9;
+  --color-ink: #1d1519;
+  --color-ink-soft: #5b4b53;
+  --color-ink-faint: #8f7d85;
+  --color-line: #f1e3e8;
+  --color-line-strong: #e3cdd5;
 
-  /* Accent: a restrained slate blue used only for interactive elements. */
-  --color-accent: #1f3a4d;
-  --color-accent-hover: #162c3b;
-  --color-accent-soft: #e9eff2;
+  /* Accent: the rose of the mascot's uniform, used for interactive elements. */
+  --color-accent: #cf2d66;
+  --color-accent-hover: #b02356;
+  --color-accent-soft: #fdeaf0;
 
   /* Semantic colors, kept separate from the accent. */
   --color-loss: #b0382f;
