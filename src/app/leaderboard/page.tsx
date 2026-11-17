@@ -135,7 +135,7 @@ export default function LeaderboardPage() {
           A wallet is ranked when anyone scans it, and a new scan replaces its
           previous entry. Addresses and trading history are public on-chain
           data. Wallets labelled as bots, exchanges or liquidity pools are not
-          ranked. Being on this list is not a claim on the fund.
+          ranked. Being on this list does not entitle a wallet to anything.
         </p>
       </div>
     </main>

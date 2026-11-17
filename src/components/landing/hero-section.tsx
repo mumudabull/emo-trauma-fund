@@ -24,7 +24,7 @@ const FUND_FACTS: readonly FundFact[] = [
   { term: "Asset class", detail: "Emotional damage" },
   { term: "Benchmark", detail: "Your entry price" },
   { term: "Loss scanner", detail: <StatusPill tone="live">Live</StatusPill> },
-  { term: "Claims desk", detail: <StatusPill tone="next">Next</StatusPill> },
+  { term: "Share cards", detail: <StatusPill tone="live">Live</StatusPill> },
 ];
 
 function FundFactStrip() {
@@ -67,8 +67,8 @@ export function HeroSection() {
 
             <p className="max-w-xl text-lg leading-relaxed text-ink-soft">
               {siteConfig.tagline} Paste a Solana wallet. We review its trading
-              history, total the damage and issue a trauma score with a report
-              you can share.
+              history, total the damage and issue a trauma score with a card you
+              can post.
             </p>
 
             <div className="max-w-xl">

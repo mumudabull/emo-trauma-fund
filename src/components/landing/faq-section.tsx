@@ -22,12 +22,17 @@ const FREQUENTLY_ASKED_QUESTIONS: readonly FrequentlyAskedQuestion[] = [
   {
     question: "Can I scan a wallet that is not mine?",
     answer:
-      "Yes. Any Solana address works, because the data is public. When the claims desk opens, only wallets verified by signature will be eligible for payouts.",
+      "Yes. Any Solana address works, because the data is public. Scanning a wallet does not prove you own it, so anything that depends on ownership will ask you to verify the wallet by signature.",
+  },
+  {
+    question: "How do I share my score?",
+    answer:
+      "Open your report and use the share button. It opens a post for X with your score, your diagnosis and the link already filled in. You can also copy the report link and paste it anywhere that previews links, and the card shows up with it.",
   },
   {
     question: "Does a high score mean I get paid?",
     answer:
-      "No. Claims are not open, and when they are, airdrops will be discretionary and limited to holders. A trauma score is a measurement, not an entitlement.",
+      "No. A trauma score is a measurement, not an entitlement. Any airdrops to holders are discretionary.",
   },
   {
     question: "Why does my wallet say there is not enough history?",

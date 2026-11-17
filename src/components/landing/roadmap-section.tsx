@@ -1,7 +1,7 @@
 /**
  * File: src/components/landing/roadmap-section.tsx
  * Purpose: Product roadmap. Phase numbers reflect the real build order:
- * the loss scanner (shipped), the claims desk (next) and the Telegram group
+ * the loss scanner (shipped), the leaderboard (next) and the Telegram group
  * therapy bot (planned).
  */
 import { SectionHeading } from "@/components/section-heading";
@@ -33,16 +33,15 @@ const ROADMAP_PHASES: readonly RoadmapPhase[] = [
   },
   {
     phaseNumber: "Phase 2",
-    title: "Claims desk",
+    title: "The critical list",
     statusLabel: "Next",
     statusTone: "next",
-    summary: "Turn scores into payouts from the fund.",
+    summary: "Rank the damage and give people something to beat.",
     deliverables: [
       "Leaderboard of the highest trauma scores",
+      "Share card for your rank on the board",
       "Wallet verification by signature",
-      "Scoring fixed to a published snapshot date",
-      `Weekly airdrops to top-scoring ${siteConfig.ticker} holders`,
-      "Public ledger of every payout",
+      `Airdrops to top-scoring ${siteConfig.ticker} holders`,
     ],
   },
   {

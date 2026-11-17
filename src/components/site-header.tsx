@@ -10,8 +10,8 @@ import { siteConfig } from "@/lib/config/site-config";
 
 const NAVIGATION_LINKS = [
   { label: "How it works", href: "/#how-it-works" },
+  { label: "Share", href: "/#share" },
   { label: "Methodology", href: "/#methodology" },
-  { label: "The fund", href: "/#fund" },
   { label: "Leaderboard", href: "/leaderboard" },
   { label: "Roadmap", href: "/#roadmap" },
 ] as const;

@@ -32,7 +32,7 @@ const PROCESS_STEPS: readonly ProcessStep[] = [
     stepNumber: "03",
     title: "Report",
     description:
-      "You get a trauma score from 0 to 100, a diagnosis and a report page with its own share card for X.",
+      "You get a trauma score from 0 to 100, a diagnosis and a report page with its own share card, ready to post.",
     icon: Share2,
   },
 ];

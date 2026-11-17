@@ -11,7 +11,7 @@ trading history, totals the damage, and issues a trauma score from 0 to 100
 with a diagnosis, a report page and a share card for X.
 
 This repository is phase 1 of the roadmap (the scanner and website). The
-claims desk and the Telegram group therapy bot are phases 2 and 3.
+leaderboard and the Telegram group therapy bot are phases 2 and 3.
 
 ## Stack
 
@@ -60,14 +60,14 @@ as a placeholder before launch.
 
 ## Routes
 
-| Route                              | Purpose                                                              |
-| ---------------------------------- | -------------------------------------------------------------------- |
-| `/`                                | Landing page with the scan form, methodology, fund, roadmap and FAQ. |
-| `/report/{wallet}`                 | Report for one wallet. The scan streams in on the server.            |
-| `/report/{wallet}/opengraph-image` | Share card (PNG) with the score and diagnosis.                       |
-| `/leaderboard`                     | The highest trauma scores among scanned wallets.                     |
-| `/api/leaderboard?limit=25`        | The same board as JSON.                                              |
-| `/api/scan/{wallet}`               | The same scan as JSON, for the Telegram bot and other clients.       |
+| Route                              | Purpose                                                                 |
+| ---------------------------------- | ----------------------------------------------------------------------- |
+| `/`                                | Landing page with the scan form, sharing, methodology, roadmap and FAQ. |
+| `/report/{wallet}`                 | Report for one wallet. The scan streams in on the server.               |
+| `/report/{wallet}/opengraph-image` | Share card (PNG) with the score and diagnosis.                          |
+| `/leaderboard`                     | The highest trauma scores among scanned wallets.                        |
+| `/api/leaderboard?limit=25`        | The same board as JSON.                                                 |
+| `/api/scan/{wallet}`               | The same scan as JSON, for the Telegram bot and other clients.          |
 
 ## Architecture
 
@@ -155,7 +155,7 @@ methodology section of the site renders from the same definitions.
 
 Wallets with fewer than 5 closed positions are not scored. Wallets the
 provider labels as bots, arbitrage, exchanges or pools are scored but flagged
-as not eligible for claims.
+and left off the leaderboard.
 
 ## Deployment
 
@@ -188,10 +188,9 @@ locally either way.
 
 1. **Loss scanner** (this repository): wallet scan, trauma score, report page,
    share card, JSON API.
-2. **Claims desk**: wallet verification by signature, scoring fixed to a
-   published snapshot date, weekly discretionary airdrops to the top-scoring
-   $ETF holders (capped per wallet), and a public ledger of every payout. How
-   the fund is financed is not stated on the site.
+2. **The critical list**: the leaderboard of the highest trauma scores, a
+   share card for a wallet's rank, wallet verification by signature, and
+   discretionary airdrops to the top-scoring $ETF holders.
 3. **Group therapy on Telegram**: a bot that scans wallets in chat (via
    `/api/scan/{wallet}`), posts rug and liquidation alerts as intake notices,
    and runs a weekly worst-trade leaderboard.

@@ -50,7 +50,7 @@ export interface WalletLossProfile {
   /**
    * Set when the data provider labels the wallet as automated or
    * institutional (bot, arbitrage, exchange, liquidity pool). Such wallets
-   * still get a score, but are flagged as not eligible for claims.
+   * still get a score, but are flagged and left off the leaderboard.
    */
   automatedWalletLabel: string | null;
   /** ISO 8601 timestamp of the provider's last refresh for this wallet. */

@@ -165,7 +165,7 @@ export async function WalletReport({ params }: WalletReportProps) {
               {profile.automatedWalletLabel}
             </strong>
             . Automated and institutional wallets still get a score, but they
-            will not be eligible for claims.
+            are not ranked on the leaderboard.
           </span>
         </p>
       ) : null}
