@@ -88,6 +88,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${siteConfig.name} (${siteConfig.ticker})`,
     description: siteConfig.description,
+    // Attributes link previews on X to the project's account.
+    site: siteConfig.xHandle,
+    creator: siteConfig.xHandle,
   },
 };
 

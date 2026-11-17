@@ -1,9 +1,10 @@
 /**
  * File: src/lib/config/site-config.ts
  * Purpose: Public, browser-safe site configuration (brand strings, token and
- * social links). Every optional value comes from a NEXT_PUBLIC_* environment
- * variable and is left undefined when unset, so the UI hides the matching
- * element instead of rendering a placeholder.
+ * social links). The X and Telegram channels have defaults in code. The token
+ * address and buy link come only from NEXT_PUBLIC_* environment variables and
+ * stay undefined when unset, so the UI hides them instead of rendering a
+ * placeholder.
  */
 
 /**
@@ -50,6 +51,36 @@ function resolveSiteUrl(): string {
   return "http://localhost:3000";
 }
 
+/**
+ * The project's official channels. They are defaults in code so the links
+ * work on every deployment without extra setup; NEXT_PUBLIC_X_URL and
+ * NEXT_PUBLIC_TELEGRAM_URL override them if the accounts ever move.
+ */
+const DEFAULT_X_URL = "https://x.com/soltrauma";
+const DEFAULT_TELEGRAM_URL = "https://t.me/emotionaltraumafund";
+
+/**
+ * Derives the "@handle" from an X profile URL, for use in share text and
+ * card metadata. Returns undefined when the URL is not a plain profile link.
+ */
+function extractXHandle(xProfileUrl: string): string | undefined {
+  try {
+    const parsedUrl = new URL(xProfileUrl);
+    const isXHost = /^(www\.)?(x|twitter)\.com$/.test(parsedUrl.hostname);
+    const [firstPathSegment] = parsedUrl.pathname.split("/").filter(Boolean);
+    // X handles are 1 to 15 letters, digits or underscores.
+    if (isXHost && firstPathSegment && /^\w{1,15}$/.test(firstPathSegment)) {
+      return `@${firstPathSegment}`;
+    }
+  } catch {
+    // Fall through: an unparseable URL has no handle.
+  }
+  return undefined;
+}
+
+const resolvedXUrl =
+  readOptionalHttpUrl(process.env.NEXT_PUBLIC_X_URL) ?? DEFAULT_X_URL;
+
 // NEXT_PUBLIC_* variables must be referenced as full static property accesses
 // so the bundler can inline them into client code.
 export const siteConfig = {
@@ -74,8 +105,12 @@ export const siteConfig = {
   siteUrl: resolveSiteUrl(),
   tokenMintAddress: readOptionalText(process.env.NEXT_PUBLIC_TOKEN_MINT),
   buyUrl: readOptionalHttpUrl(process.env.NEXT_PUBLIC_BUY_URL),
-  xUrl: readOptionalHttpUrl(process.env.NEXT_PUBLIC_X_URL),
-  telegramUrl: readOptionalHttpUrl(process.env.NEXT_PUBLIC_TELEGRAM_URL),
+  xUrl: resolvedXUrl,
+  /** The X handle with its leading "@", for example "@soltrauma". */
+  xHandle: extractXHandle(resolvedXUrl),
+  telegramUrl:
+    readOptionalHttpUrl(process.env.NEXT_PUBLIC_TELEGRAM_URL) ??
+    DEFAULT_TELEGRAM_URL,
 } as const;
 
 /** Explorer links are centralised here so the explorer can be swapped once. */

@@ -7,7 +7,12 @@ import { buildReportUrl, siteConfig } from "@/lib/config/site-config";
 import type { TraumaAssessment } from "@/lib/scanner/types";
 
 export function buildReportShareText(assessment: TraumaAssessment): string {
-  return `Trauma score: ${assessment.score}/100. Diagnosis: ${assessment.tier.name}. The ${siteConfig.ticker} loss scanner has reviewed my chart history.`;
+  // Mentioning the project's account makes every shared report point back to
+  // it. The mention is dropped if no handle can be derived from the X link.
+  const reviewer = siteConfig.xHandle
+    ? `${siteConfig.xHandle} (${siteConfig.ticker})`
+    : `The ${siteConfig.ticker} loss scanner`;
+  return `Trauma score: ${assessment.score}/100. Diagnosis: ${assessment.tier.name}. ${reviewer} has reviewed my chart history.`;
 }
 
 /**
