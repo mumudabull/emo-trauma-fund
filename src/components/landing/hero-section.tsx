@@ -22,10 +22,7 @@ const FUND_FACTS: readonly FundFact[] = [
   { term: "Ticker", detail: siteConfig.ticker },
   { term: "Chain", detail: siteConfig.chainName },
   { term: "Asset class", detail: "Emotional damage" },
-  {
-    term: "Trading fee",
-    detail: `${siteConfig.tradingFee.totalPercent}% (${siteConfig.tradingFee.fundPercent}% fund, ${siteConfig.tradingFee.buybackPercent}% buyback)`,
-  },
+  { term: "Benchmark", detail: "Your entry price" },
   { term: "Loss scanner", detail: <StatusPill tone="live">Live</StatusPill> },
   { term: "Claims desk", detail: <StatusPill tone="next">Next</StatusPill> },
 ];
