@@ -38,6 +38,7 @@ const ROADMAP_PHASES: readonly RoadmapPhase[] = [
     statusTone: "next",
     summary: "Turn scores into payouts from the fund.",
     deliverables: [
+      "Leaderboard of the highest trauma scores",
       "Wallet verification by signature",
       "Scoring fixed to a published snapshot date",
       `Weekly airdrops to top-scoring ${siteConfig.ticker} holders`,

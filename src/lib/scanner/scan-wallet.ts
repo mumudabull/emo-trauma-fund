@@ -6,7 +6,10 @@
  */
 import "server-only";
 import { cacheLife } from "next/cache";
+import { after } from "next/server";
 import { getServerConfig } from "@/lib/config/server-config";
+import { buildLeaderboardRecord } from "@/lib/leaderboard/leaderboard-entry";
+import { recordLeaderboardEntry } from "@/lib/leaderboard/leaderboard-store";
 import {
   fetchWalletPnlSummary,
   fetchWorstLosingPositions,
@@ -138,9 +141,40 @@ async function loadCachedWalletScan(
 }
 
 /**
+ * A scan counts as fresh for this long after it was computed. Results served
+ * from the scan cache are older than this, so the leaderboard is written
+ * about once per real scan instead of once per page view.
+ */
+const FRESH_SCAN_WINDOW_MILLISECONDS = 60_000;
+
+/**
+ * Queues a leaderboard write for a freshly computed, rankable scan. The
+ * write runs after the response has been sent, so it never slows a report.
+ */
+function scheduleLeaderboardRecording(scanResult: WalletScanResult): void {
+  const leaderboardRecord = buildLeaderboardRecord(scanResult);
+  if (!leaderboardRecord) {
+    return;
+  }
+  const scanAgeMilliseconds =
+    Date.now() - Date.parse(leaderboardRecord.scannedAt);
+  if (
+    Number.isNaN(scanAgeMilliseconds) ||
+    scanAgeMilliseconds > FRESH_SCAN_WINDOW_MILLISECONDS
+  ) {
+    return;
+  }
+  after(() => recordLeaderboardEntry(leaderboardRecord));
+}
+
+/**
  * Scans a wallet. `walletAddress` must already be validated with
  * parseSolanaWalletAddress; callers are also responsible for rate limiting,
  * because that depends on request headers, which cached code cannot read.
+ *
+ * Must be called at request time (after `connection()` in a Server
+ * Component, or from a route handler), because it reads the clock to decide
+ * whether the result is fresh enough to record on the leaderboard.
  */
 export async function scanWallet(
   walletAddress: string,
@@ -150,5 +184,7 @@ export async function scanWallet(
   if (!getServerConfig().solanaTrackerApiKey) {
     return { status: "scanner_unconfigured" };
   }
-  return loadCachedWalletScan(walletAddress);
+  const scanResult = await loadCachedWalletScan(walletAddress);
+  scheduleLeaderboardRecording(scanResult);
+  return scanResult;
 }

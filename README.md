@@ -32,16 +32,17 @@ pages show a "scanner is not connected" notice instead of results.
 
 ## Configuration
 
-| Variable                     | Required    | Purpose                                                    |
-| ---------------------------- | ----------- | ---------------------------------------------------------- |
-| `SOLANA_TRACKER_API_KEY`     | For scans   | Solana Tracker Data API key. Server-only.                  |
-| `NEXT_PUBLIC_SITE_URL`       | Recommended | Public origin, used in share links and social cards.       |
-| `NEXT_PUBLIC_TOKEN_MINT`     | Optional    | $ETF mint address. Shows the contract block in the footer. |
-| `NEXT_PUBLIC_BUY_URL`        | Optional    | Shows "Buy $ETF" links.                                    |
-| `NEXT_PUBLIC_X_URL`          | Optional    | Shows the X link in the footer.                            |
-| `NEXT_PUBLIC_TELEGRAM_URL`   | Optional    | Shows the Telegram link in the footer.                     |
-| `SCAN_RATE_LIMIT_PER_MINUTE` | Optional    | Scans per client IP per minute. Default 12.                |
-| `SOLANA_TRACKER_BASE_URL`    | Optional    | Provider origin override.                                  |
+| Variable                                             | Required            | Purpose                                                                                                                        |
+| ---------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `SOLANA_TRACKER_API_KEY`                             | For scans           | Solana Tracker Data API key. Server-only.                                                                                      |
+| `NEXT_PUBLIC_SITE_URL`                               | Recommended         | Public origin, used in share links and social cards.                                                                           |
+| `NEXT_PUBLIC_TOKEN_MINT`                             | Optional            | $ETF mint address. Shows the contract block in the footer.                                                                     |
+| `NEXT_PUBLIC_BUY_URL`                                | Optional            | Shows "Buy $ETF" links.                                                                                                        |
+| `NEXT_PUBLIC_X_URL`                                  | Optional            | Shows the X link in the footer.                                                                                                |
+| `NEXT_PUBLIC_TELEGRAM_URL`                           | Optional            | Shows the Telegram link in the footer.                                                                                         |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | For the leaderboard | Upstash Redis REST credentials. `KV_REST_API_URL` and `KV_REST_API_TOKEN` (injected by Vercel's Upstash integration) work too. |
+| `SCAN_RATE_LIMIT_PER_MINUTE`                         | Optional            | Scans per client IP per minute. Default 12.                                                                                    |
+| `SOLANA_TRACKER_BASE_URL`                            | Optional            | Provider origin override.                                                                                                      |
 
 Optional links are hidden while their variable is empty, so nothing renders
 as a placeholder before launch.
@@ -64,6 +65,8 @@ as a placeholder before launch.
 | `/`                                | Landing page with the scan form, methodology, fund, roadmap and FAQ. |
 | `/report/{wallet}`                 | Report for one wallet. The scan streams in on the server.            |
 | `/report/{wallet}/opengraph-image` | Share card (PNG) with the score and diagnosis.                       |
+| `/leaderboard`                     | The highest trauma scores among scanned wallets.                     |
+| `/api/leaderboard?limit=25`        | The same board as JSON.                                              |
 | `/api/scan/{wallet}`               | The same scan as JSON, for the Telegram bot and other clients.       |
 
 ## Architecture
@@ -76,6 +79,7 @@ src/
     config/                    public site config and validated server config
     providers/solana-tracker/  HTTP client and zod response schemas
     scanner/                   domain types, profile builder, trauma score, scan orchestration
+    leaderboard/               ranking logic and the Redis store
     rate-limit/                sliding-window limiter and request guard
     share-card/                share text and social card rendering
     format/                    money, percent, duration and date formatting
@@ -103,6 +107,20 @@ How a scan runs:
 
 Adding a second chain or data source means writing one adapter that returns a
 `WalletLossProfile`. Scoring and UI do not change.
+
+## Leaderboard
+
+Every freshly scanned, diagnosed wallet is written to a Redis sorted set,
+ordered by trauma score with ties going to the larger combined loss. Each
+wallet appears once with its latest score, the board keeps the top 1,000, and
+wallets labelled as bots, exchanges or pools are not ranked. Reads are cached
+for about a minute.
+
+Until a database is connected the leaderboard section and page show reserved
+ranks marked "opening soon", and nothing is recorded. To open it on Vercel:
+Storage, Create Database, Upstash for Redis, connect it to this project, then
+redeploy. Wallets scanned before the database was connected are not on the
+board; they join when they are scanned again.
 
 ## Share images
 
